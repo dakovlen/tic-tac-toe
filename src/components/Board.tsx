@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {FC} from "react";
 import Square from "./Square";
 
 function calculateWinner(squares: any) {
@@ -21,26 +21,28 @@ function calculateWinner(squares: any) {
   return null;
 }
 
+interface PropsBoard {
+  xIsNext: any,
+  squares: any,
+  onPlay: any
+}
 
-
-export default function Board() {
-  const [xIsNext, setXIsNext] = useState(true);
-  const [squares, setSquares] = useState(Array(9).fill(null));
-
-  function handleClick(i: any) {
-    if (squares[i]) {
-      return null;
+const Board: FC<PropsBoard> = ({ 
+  xIsNext, 
+  squares, 
+  onPlay
+}) => {
+  function handleClick(i:any) {
+    if (calculateWinner(squares) || squares[i]) {
+      return;
     }
-
     const nextSquares = squares.slice();
-
     if (xIsNext) {
-      nextSquares[i] = "X";
+      nextSquares[i] = 'X';
     } else {
-      nextSquares[i] = "O";
+      nextSquares[i] = 'O';
     }
-    setSquares(nextSquares);
-    setXIsNext(!xIsNext);
+    onPlay(nextSquares);
   }
 
   const winner = calculateWinner(squares);
@@ -72,3 +74,5 @@ export default function Board() {
     </>
   );
 }
+
+export default Board;
